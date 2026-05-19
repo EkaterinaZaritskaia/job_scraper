@@ -1,0 +1,4 @@
+vacancies:
+    css: "li.jobposts-item h3"
+    multiple: true
+    type: Text
