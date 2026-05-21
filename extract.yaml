@@ -1,4 +1,11 @@
-vacancies:
-    css: "li.jobposts-item h3"
+jobs:
+    css: "li.jobposts-item"
     multiple: true
-    type: Text
+    children:
+        title:
+            css: "h3"
+            type: Text
+
+        url:
+            css: "a.jobpost-mainlink"
+            type: Link
