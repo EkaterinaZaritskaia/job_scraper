@@ -19,7 +19,7 @@ def extract(source):
 def load_new_job():
     """Creation of the .txt file"""
     try:
-        with open("data.txt", "r") as file:
+        with open("data.txt", "r", encoding="utf-8") as file:
             return set(file.read().splitlines())
     except FileNotFoundError:
         return set()
@@ -36,7 +36,7 @@ def find_new_jobs(jobs):
     new_jobs=[]
 
     for job in jobs:
-        if job["url"] not in seen_jobs:
+        if f'{job["title"]} | {job["url"]}' not in seen_jobs:
             new_jobs.append(job)
             save_new_job(job)
     return new_jobs
@@ -50,3 +50,5 @@ if __name__ == "__main__":
     if new_jobs:
         print("New vacancy found")
         print(new_jobs)
+    else:
+        print("No new jobs found")
