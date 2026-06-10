@@ -1,5 +1,9 @@
 import requests
 import selectorlib
+import time
+from database import create_tables
+from database import add_new_job
+
 
 URL = "https://www.jobstack.it/it-jobs?positiontype=11&location=Praha&isDetail=0"
 HEADERS = {
@@ -23,6 +27,7 @@ def load_new_job():
             return set(file.read().splitlines())
     except FileNotFoundError:
         return set()
+    
 
 def save_new_job(job):
     """Save data to the .txt file"""
@@ -41,14 +46,18 @@ def find_new_jobs(jobs):
             save_new_job(job)
     return new_jobs
 
-if __name__ == "__main__":
-    scraped = scrape(URL)
-    extracted = extract(scraped)
-    print(extracted)
+#def create_tables()
 
-    new_jobs = find_new_jobs(extracted)
-    if new_jobs:
-        print("New vacancy found")
-        print(new_jobs)
-    else:
-        print("No new jobs found")
+if __name__ == "__main__":
+    while True:
+        scraped = scrape(URL)
+        extracted = extract(scraped)
+        print(extracted)
+
+        new_jobs = find_new_jobs(extracted)
+        if new_jobs:
+            print("New vacancy found")
+            print(new_jobs)
+        else:
+            print("No new jobs found")
+        time.sleep(3600)
