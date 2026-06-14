@@ -1,6 +1,8 @@
 import requests
 import selectorlib
 import time
+import sqlite3
+from datetime import datetime, timezone
 from database import create_tables
 from database import add_new_job
 
@@ -15,40 +17,40 @@ def scrape(url):
     source = response.text
     return source
 
+
 def extract(source):
     extractor = selectorlib.Extractor.from_yaml_file("extract.yaml")
     value = extractor.extract(source)["jobs"]
     return value
 
-def load_new_job():
-    """Creation of the .txt file"""
-    try:
-        with open("data.txt", "r", encoding="utf-8") as file:
-            return set(file.read().splitlines())
-    except FileNotFoundError:
-        return set()
-    
 
-def save_new_job(job):
-    """Save data to the .txt file"""
-    with open("data.txt", "a", encoding = "utf-8") as file:
-        file.write(f'{job["title"]} | {job["url"]}\n')
+def job_check(url):
+    # create a database connection
+    with sqlite3.connect('jobs.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT 1 FROM jobs WHERE url = ?', (url,) # Execute a query to check if the URL exists.
+                       )
+    return cursor.fetchone() is not None
+
 
 def find_new_jobs(jobs):
     """Find new vacancy jobs"""
-    seen_jobs = load_new_job()
-
     new_jobs=[]
 
     for job in jobs:
-        if f'{job["title"]} | {job["url"]}' not in seen_jobs:
+        job["company"] = job["company"] or "Unknown"
+        job["created_at"] = datetime.now(timezone.utc).isoformat()
+
+        if not job_check(job["url"]):
             new_jobs.append(job)
-            save_new_job(job)
+            add_new_job(job)  # from database.py
+
     return new_jobs
 
-#def create_tables()
 
 if __name__ == "__main__":
+    create_tables()
+
     while True:
         scraped = scrape(URL)
         extracted = extract(scraped)

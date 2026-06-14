@@ -9,3 +9,7 @@ jobs:
         url:
             css: "a.jobpost-mainlink"
             type: Link
+
+        company:
+            css: ".custom-profile-label--secondary"
+            type: Text

@@ -1,13 +1,12 @@
 import sqlite3
 
 def create_tables():
-#  the CREATE TABLE statements that create the jobs table:
+    #  the CREATE TABLE statements that create the jobs table:
     sql_statements = ['''CREATE TABLE IF NOT EXISTS jobs(
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         company TEXT NOT NULL,
                                         title TEXT NOT NULL,
                                         url TEXT NOT NULL UNIQUE,
-                                        description TEXT NOT NULL,
                                         created_at TEXT NOT NULL
                                         )
                                         ''']
@@ -28,22 +27,21 @@ def create_tables():
 
 def add_new_job(job):
     # insert table statement
-    with sqlite3.connect('jobs.db') as conn:
-        cursor = conn.cursor()
-
     sql = '''
         INSERT INTO jobs(
         company, 
         title, 
         url, 
-        description, 
         created_at)
-        VALUES(?, ?, ?, ?, ?)'''
+        VALUES(?, ?, ?, ?)'''
 
-    cursor.execute(sql,
-                   (job['company'],
-                    job['title'],
-                    job['url'],
-                    job['description'],
-                    job['created_at']))
-    conn.commit()
+
+    with sqlite3.connect('jobs.db') as conn:
+        cursor = conn.cursor()
+
+        cursor.execute(sql,(
+                        job['company'],
+                        job['title'],
+                        job['url'],
+                        job['created_at']))
+        conn.commit()
