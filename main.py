@@ -7,9 +7,21 @@ from database import create_tables
 from database import add_new_job
 
 
-URL = "https://www.jobstack.it/it-jobs?positiontype=11&location=Praha&isDetail=0"
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+
+Base_URL = f"https://www.jobstack.it/it-jobs?"
+
+POSITION_TYPE = 11
+LOCATION = "Praha"
+
+params = {
+    "positiontype": POSITION_TYPE,
+    "location": LOCATION,
+    "isDetail": 0,
+}
+response = requests.get(Base_URL, params=params, headers=HEADERS)
+
 
 def scrape(url):
     """Scrape the page source from the URL"""
@@ -43,13 +55,13 @@ def find_new_jobs(jobs):
 
         if not job_check(job["url"]):
             new_jobs.append(job)
-            add_new_job(job)  # from database.py
+            add_new_job(job, "jobs.db")  # from database.py
 
     return new_jobs
 
 
 if __name__ == "__main__":
-    create_tables()
+    create_tables("jobs.db")
 
     while True:
         scraped = scrape(URL)

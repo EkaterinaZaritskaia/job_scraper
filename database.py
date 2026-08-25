@@ -1,6 +1,6 @@
 import sqlite3
 
-def create_tables():
+def create_tables(db_name):
     #  the CREATE TABLE statements that create the jobs table:
     sql_statements = ['''CREATE TABLE IF NOT EXISTS jobs(
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,7 +12,7 @@ def create_tables():
                                         ''']
     # create a database connection
     try:
-        with sqlite3.connect('jobs.db') as conn:
+        with sqlite3.connect(db_name) as conn:
             cursor = conn.cursor()
 
             for statement in sql_statements:
@@ -25,7 +25,7 @@ def create_tables():
        print("Failed to create tables:", e)
 
 
-def add_new_job(job):
+def add_new_job(job, db_name):
     # insert table statement
     sql = '''
         INSERT INTO jobs(
@@ -36,7 +36,7 @@ def add_new_job(job):
         VALUES(?, ?, ?, ?)'''
 
 
-    with sqlite3.connect('jobs.db') as conn:
+    with sqlite3.connect(db_name) as conn:
         cursor = conn.cursor()
 
         cursor.execute(sql,(
