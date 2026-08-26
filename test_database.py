@@ -1,5 +1,8 @@
 import sqlite3
 import os
+import pytest
+
+from asyncio.windows_events import NULL
 
 from database import create_tables, add_new_job
 
@@ -36,3 +39,21 @@ def test_add_new_job():
     result = find_job_by_url(job["url"])
 
     assert result is not None
+
+def test_find_missing_job():
+    result = find_job_by_url("/test-job/321")
+
+    assert result is None
+
+def test_unique_job():
+    job = {
+        "company": "Test Company",
+        "title": "QA Engineer",
+        "url": "/test-job/111",
+        "created_at": "2026-08-01T00:00:00"
+    }
+
+    add_new_job(job, "jobs_test.db")
+
+    with pytest.raises(sqlite3.IntegrityError):
+        add_new_job(job, "jobs_test.db")
