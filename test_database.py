@@ -1,13 +1,20 @@
 import sqlite3
-import os
 import pytest
-
-from asyncio.windows_events import NULL
 
 from database import create_tables, add_new_job
 
-if os.path.exists("jobs_test.db"):
-    os.remove("jobs_test.db")
+
+@pytest.fixture
+def database():
+    create_tables("jobs_test.db")
+
+    with sqlite3.connect('jobs_test.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM jobs")
+        conn.commit()
+
+    yield
+
 
 def create_test_job():
     job = {
@@ -29,9 +36,8 @@ def find_job_by_url(url):
 
     return result
 
-create_tables("jobs_test.db")
 
-def test_add_new_job():
+def test_add_new_job(database):
     job = create_test_job()
 
     add_new_job(job, "jobs_test.db")
@@ -40,18 +46,15 @@ def test_add_new_job():
 
     assert result is not None
 
-def test_find_missing_job():
+
+def test_find_missing_job(database):
     result = find_job_by_url("/test-job/321")
 
     assert result is None
 
-def test_unique_job():
-    job = {
-        "company": "Test Company",
-        "title": "QA Engineer",
-        "url": "/test-job/111",
-        "created_at": "2026-08-01T00:00:00"
-    }
+
+def test_unique_job(database):
+    job = create_test_job()
 
     add_new_job(job, "jobs_test.db")
 

@@ -18,7 +18,7 @@ def create_tables(db_name):
             for statement in sql_statements:
                 cursor.execute(statement)
 
-        conn.commit()
+            conn.commit()
         print("Tables created successfully.")
 
     except sqlite3.OperationalError as e:
