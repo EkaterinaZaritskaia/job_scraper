@@ -15,6 +15,11 @@ def database():
 
     yield
 
+    with sqlite3.connect('jobs_test.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM jobs")
+        conn.commit()
+
 
 def create_test_job():
     job = {
