@@ -42,6 +42,21 @@ def find_job_by_url(url):
     return result
 
 
+def test_create_tables(database):
+    create_tables("jobs_test.db")
+
+    with sqlite3.connect("jobs_test.db") as conn:
+        cursor = conn.cursor()
+
+        cursor.execute("PRAGMA table_info(jobs)")
+        result = cursor.fetchall()
+
+        column_names = [item[1] for item in result]
+
+        assert column_names == ["id", "company", "title", "url", "created_at"]
+
+#        print(column_names)
+
 def test_add_new_job(database):
     job = create_test_job()
 
@@ -50,6 +65,9 @@ def test_add_new_job(database):
     result = find_job_by_url(job["url"])
 
     assert result is not None
+    assert result[1] == job["company"]
+    assert result[2] == job["title"]
+    assert result[4] == job["created_at"]
 
 
 def test_find_missing_job(database):
@@ -57,7 +75,7 @@ def test_find_missing_job(database):
 
     assert result is None
 
-
+#Prohibit duplicate URLs
 def test_unique_job(database):
     job = create_test_job()
 
