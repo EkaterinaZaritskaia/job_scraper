@@ -21,12 +21,12 @@ def database():
         conn.commit()
 
 
-def create_test_job():
+def create_test_job(company="Test Company", title="QA Engineer", url="/test-job/123", created_at="2026-08-01T00:00:00"):
     job = {
-        "company": "Test Company",
-        "title": "QA Engineer",
-        "url": "/test-job/123",
-        "created_at": "2026-08-01T00:00:00"
+        "company": company,
+        "title": title,
+        "url": url,
+        "created_at": created_at
     }
     return job
 
@@ -68,7 +68,7 @@ def test_add_new_job(database):
     assert result[1] == job["company"]
     assert result[2] == job["title"]
     assert result[4] == job["created_at"]
-
+ 
 
 def test_find_missing_job(database):
     result = find_job_by_url("/test-job/321")
@@ -81,5 +81,29 @@ def test_unique_job(database):
 
     add_new_job(job, "jobs_test.db")
 
+    with pytest.raises(sqlite3.IntegrityError):
+        add_new_job(job, "jobs_test.db")
+
+
+def test_add_job_without_company(database):
+    job = create_test_job(company=None)
+    with pytest.raises(sqlite3.IntegrityError):
+        add_new_job(job, "jobs_test.db")
+
+
+def test_job_without_title(database):
+    job = create_test_job(title=None)
+    with pytest.raises(sqlite3.IntegrityError):
+        add_new_job(job, "jobs_test.db")
+
+
+def test_job_without_url(database):
+    job = create_test_job(url=None)
+    with pytest.raises(sqlite3.IntegrityError):
+        add_new_job(job, "jobs_test.db")
+
+
+def test_job_without_created_at(database):
+    job = create_test_job(created_at=None)
     with pytest.raises(sqlite3.IntegrityError):
         add_new_job(job, "jobs_test.db")
