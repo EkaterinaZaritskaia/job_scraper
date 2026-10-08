@@ -1,4 +1,30 @@
-# Tutorial
+# job_scraper
 
-This is a tutorial where you will learn how to create Git
-repositories from your projects and share them on GitHub.
+> 🚧 Work in progress
+
+A Python script that checks a job board every hour, stores vacancies
+in a local SQLite database and reports only new ones.
+
+**Stack:** Python 3.12, requests, selectorlib, SQLite, pytest
+
+## Run
+
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
+## Test
+
+```bash
+pytest -v
+```
+
+## Roadmap
+
+- [x] Scrape and parse job listings
+- [x] Store jobs in SQLite, detect new ones by URL
+- [x] Unit tests for the database layer
+- [ ] Isolate tests with pytest `tmp_path`
+- [ ] GitHub Actions CI
+- [ ] Notifications about new jobs (e.g. email / Telegram)

@@ -20,12 +20,11 @@ params = {
     "location": LOCATION,
     "isDetail": 0,
 }
-response = requests.get(Base_URL, params=params, headers=HEADERS)
 
-
-def scrape(url):
+def scrape(url, params):
     """Scrape the page source from the URL"""
-    response = requests.get(url, headers=HEADERS)
+    response = requests.get(url, params=params, headers=HEADERS)
+    response.raise_for_status()
     source = response.text
     return source
 
@@ -64,7 +63,7 @@ if __name__ == "__main__":
     create_tables("jobs.db")
 
     while True:
-        scraped = scrape(URL)
+        scraped = scrape(Base_URL,params)
         extracted = extract(scraped)
         print(extracted)
 
