@@ -1,5 +1,5 @@
 # job_scraper
-
+![Tests](https://github.com/EkaterinaZaritskaia/job_scraper/actions/workflows/tests.yml/badge.svg)
 > 🚧 Work in progress
 
 A Python script that checks a job board every hour, stores vacancies
@@ -25,6 +25,6 @@ pytest -v
 - [x] Scrape and parse job listings
 - [x] Store jobs in SQLite, detect new ones by URL
 - [x] Unit tests for the database layer
-- [ ] Isolate tests with pytest `tmp_path`
-- [ ] GitHub Actions CI
+- [x] Isolate tests with pytest `tmp_path`
+- [x] GitHub Actions CI
 - [ ] Notifications about new jobs (e.g. email / Telegram)
