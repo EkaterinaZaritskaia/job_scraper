@@ -1,5 +1,6 @@
 # job_scraper
 ![Tests](https://github.com/EkaterinaZaritskaia/job_scraper/actions/workflows/tests.yml/badge.svg)
+
 > 🚧 Work in progress
 
 A Python script that checks a job board every hour, stores vacancies
