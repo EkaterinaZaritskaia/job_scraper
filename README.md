@@ -3,8 +3,7 @@
 
 > 🚧 Work in progress
 
-A Python script that checks a job board every hour, stores vacancies
-in a local SQLite database and reports only new ones.
+A Python script that checks jobstack.it every hour, stores vacancies in a local SQLite database and reports only new ones.
 
 **Stack:** Python 3.12, requests, selectorlib, SQLite, pytest
 
